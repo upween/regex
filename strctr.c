@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "myconst.h"
 
 typedef struct _ctr_string {
 	int idx;

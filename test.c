@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "strctr.c"
 #include "myconst.h"
 
