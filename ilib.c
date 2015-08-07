@@ -12,6 +12,14 @@ typedef struct _listnode{
 	void *content;
 } ListNode;
 
+List* ilib_list_newlist(){
+	List* list = malloc(sizeof(List));
+	list -> list_size = 0;
+	list -> first_node = NULL;
+	list -> last_node = NULL;
+	return list;
+}
+
 int ilib_list_add(List *list, void *node, void index) {
 	if (list == NULL || node == NULL || index > list -> list_size) {
 		return -1;
@@ -20,6 +28,13 @@ int ilib_list_add(List *list, void *node, void index) {
 	ListNode *add_node = malloc(sizeof(ListNode));
 	if (add_node == NULL) {
 		return -1;
+	}
+
+	if (list -> list_size == 0) {
+		list -> first_node = add_node;
+		list -> last_node = add_node;
+		list -> list_size++;
+		return list -> list_size;
 	}
 
 	if (index == 0) {
@@ -42,6 +57,17 @@ int ilib_list_add(List *list, void *node, void index) {
 		add_node -> pre_node -> next_node = add_node;
 		add_node -> next_node -> pre_node = add_node;
 	}
-	list -> index ++;
-	return list -> index;
+	list -> list_size ++;
+	return list -> list_size;
+} 
+
+void* ilib_list_get(List * list, int index) {
+	if (list == NULL || index >＝ list -> list_size || index < 0) {
+		return NULL;
+	}
+	ListNode *node = list -> first_node;
+	for (int i = 0; i < index; i++) {
+		node = node -> next_node;
+	}
+	return node -> content;
 }
