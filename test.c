@@ -8,6 +8,7 @@ int main() {
 
 int test_list(){
 	List * list = ilib_list_newlist();
+
 	char *str1 = "abc\n";
 	char *str2 = "def\n";
 	char *str3 = "ghi\n";

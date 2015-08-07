@@ -1,16 +1,16 @@
 #include "myconst.h"
 
+typedef struct _listnode{
+	struct _listnode *pre_node;
+	struct _listnode *next_node;
+	void *content;
+} ListNode;
+
 typedef struct _list{
 	ListNode *first_node;
 	ListNode *last_node;
 	int list_size;
 } List;
-
-typedef struct _listnode{
-	ListNode *pre_node;
-	ListNode *next_node;
-	void *content;
-} ListNode;
 
 List* ilib_list_newlist(){
 	List* list = malloc(sizeof(List));
@@ -20,7 +20,7 @@ List* ilib_list_newlist(){
 	return list;
 }
 
-int ilib_list_add(List *list, void *node, void index) {
+int ilib_list_add(List *list, void *node, int index) {
 	if (list == NULL || node == NULL || index > list -> list_size) {
 		return -1;
 	}
@@ -29,6 +29,8 @@ int ilib_list_add(List *list, void *node, void index) {
 	if (add_node == NULL) {
 		return -1;
 	}
+
+	add_node -> content = node;
 
 	if (list -> list_size == 0) {
 		list -> first_node = add_node;
@@ -62,12 +64,14 @@ int ilib_list_add(List *list, void *node, void index) {
 } 
 
 void* ilib_list_get(List * list, int index) {
-	if (list == NULL || index >＝ list -> list_size || index < 0) {
+	if (list == NULL || index >= (list -> list_size) || index < 0) {
 		return NULL;
 	}
+
 	ListNode *node = list -> first_node;
 	for (int i = 0; i < index; i++) {
 		node = node -> next_node;
 	}
+
 	return node -> content;
 }
