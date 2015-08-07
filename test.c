@@ -9,18 +9,27 @@ int main() {
 int test_list(){
 	List * list = ilib_list_newlist();
 
-	char *str1 = "abc\n";
-	char *str2 = "def\n";
-	char *str3 = "ghi\n";
+	char *str1 = "111\n";
+	char *str2 = "222\n";
+	char *str3 = "333\n";
+	char *str4 = "444\n";
 
 	ilib_list_add(list, str1, 0);
 	ilib_list_add(list, str3, 1);
 	ilib_list_add(list, str2, 1);
+	ilib_list_add(list, str4, 3);
 
 	printf(ilib_list_get(list, 0));
-	printf(ilib_list_get(list, 1));
-	printf(ilib_list_get(list, 2));
+	ilib_list_remove(list, 0, FALSE);
+
 	printf(ilib_list_get(list, 0));
+	ilib_list_remove(list, 0, FALSE);
+
+	printf(ilib_list_get(list, 0));
+	ilib_list_remove(list, 0, FALSE);
+
+	printf(ilib_list_get(list, 0));
+	ilib_list_remove(list, 0, FALSE);
 }
 
 int test_strctr() {
