@@ -40,6 +40,8 @@ int ilib_list_add(List *list, void *node, int index) {
 	add_node -> content = node;
 
 	if (list -> list_size == 0) {
+		add_node -> pre_node = NULL;
+		add_node -> next_node = NULL;
 		list -> first_node = add_node;
 		list -> last_node = add_node;
 		list -> list_size++;
@@ -104,7 +106,7 @@ int ilib_list_remove(List* list, int index, bool free_content) {
 	if (delete_node -> pre_node != NULL) {
 		delete_node -> pre_node -> next_node = delete_node -> next_node;
 	}
-	
+
 	if (delete_node -> next_node != NULL) {
 		delete_node -> next_node -> pre_node = delete_node -> pre_node;
 	}
@@ -114,5 +116,6 @@ int ilib_list_remove(List* list, int index, bool free_content) {
 		free(delete_node -> content);
 	}
 	free(delete_node);
+
 	return list -> list_size;
 }

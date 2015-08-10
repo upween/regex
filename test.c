@@ -15,21 +15,13 @@ int test_list(){
 	char *str4 = "444\n";
 
 	ilib_list_add(list, str1, 0);
-	ilib_list_add(list, str3, 1);
 	ilib_list_add(list, str2, 1);
+	ilib_list_add(list, str3, 2);
 	ilib_list_add(list, str4, 3);
 
-	printf(ilib_list_get(list, 0));
-	ilib_list_remove(list, 0, FALSE);
-
-	printf(ilib_list_get(list, 0));
-	ilib_list_remove(list, 0, FALSE);
-
-	printf(ilib_list_get(list, 0));
-	ilib_list_remove(list, 0, FALSE);
-
-	printf(ilib_list_get(list, 0));
-	ilib_list_remove(list, 0, FALSE);
+	for (int i = 0; i < list -> list_size; i++) {
+		printf(ilib_list_get(list, i));
+	}
 }
 
 int test_strctr() {
