@@ -112,7 +112,7 @@ int ilib_list_remove(List* list, int index, bool free_content) {
 	}
 	list -> list_size --;
 
-	if (free_content) {
+	if (free_content && delete_node -> content != NULL) {
 		free(delete_node -> content);
 	}
 	free(delete_node);
