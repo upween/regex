@@ -1,9 +1,18 @@
-#include "strctr.c"
-#include "ilib.c"
-#include "myconst.h"
+#include "nodemaker.c"
 
 int main() {
-	return test_list();
+	return test_nfa();
+}
+
+int test_nfa() {
+	NFA* nfa = make_nfa("abcdefg");
+	NNode* node = nfa -> start_node;
+
+	while (node -> node_type != END) {
+		NPath* path = ilib_list_get(node -> path_list, 0);
+		printf("%c\n", path -> allowed_char);
+		node = path -> target_node;
+	}
 }
 
 int test_list(){

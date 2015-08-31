@@ -72,6 +72,10 @@ int ilib_list_add(List *list, void *node, int index) {
 	return list -> list_size;
 } 
 
+int ilib_list_append(List *list, void *node) {
+	ilib_list_add(list, node, list -> list_size);
+}
+
 void* ilib_list_get(List * list, int index) {
 	if (list == NULL || index >= (list -> list_size) || index < 0) {
 		return NULL;
