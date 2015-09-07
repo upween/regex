@@ -5,3 +5,5 @@
 #define bool int
 #define TRUE 1
 #define FALSE 0
+
+#define EPSILON -1

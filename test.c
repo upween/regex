@@ -1,18 +1,17 @@
-#include "nodemaker.c"
+#include "regex_matcher.c"
 
 int main() {
 	return test_nfa();
 }
 
 int test_nfa() {
-	NFA* nfa = make_nfa("abcdefg");
-	NNode* node = nfa -> start_node;
-
-	while (node -> node_type != END) {
-		NPath* path = ilib_list_get(node -> path_list, 0);
-		printf("%c\n", path -> allowed_char);
-		node = path -> target_node;
+	bool b = simple_match("ab*c*", "abc");
+	if (b == TRUE) {
+		printf("simple_match success. \n");
+	} else {
+		printf("simple_match fail. \n");
 	}
+	return 0;
 }
 
 int test_list(){

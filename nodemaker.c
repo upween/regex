@@ -72,6 +72,10 @@ void destory_nfa(NFA* nfa) {
 
 
 
+void error_and_exit() {
+	printf("error regex, system will exit.\n");
+	exit(0);
+}
 
 NFA* make_nfa(char* regex) {
 	NNode* current_node = NULL;
@@ -91,7 +95,19 @@ NFA* make_nfa(char* regex) {
 		c = strctr_next(ctr_regex);
 
 		if ( c == '*') {
+			if (pre_node != NULL) {
+				NPath* path = new_npath();
+				path -> target_node = pre_node;
+				path -> allowed_char = prec;
+				ilib_list_append(pre_node -> path_list, path);
 
+				NPath* path2 = new_npath();
+				path2 -> target_node = current_node;
+				path2 -> allowed_char = EPSILON;
+				ilib_list_append(pre_node -> path_list, path2);
+			} else {
+				error_and_exit();
+			}
 		} else if ( c == '|') {
 
 		} else if ( c == '(') {
@@ -116,8 +132,7 @@ NFA* make_nfa(char* regex) {
 			return nfa;
 
 		} else {
-			printf("error regex, system will exit.\n");
-			exit(0);
+			error_and_exit();
 		}
 	}
 }
