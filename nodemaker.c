@@ -77,14 +77,31 @@ void error_and_exit() {
 	exit(0);
 }
 
+NNode* end_current_path(NFA* nfa, NNode* section_end_node, NNode* current_node) {
+	if (section_end_node == NULL) {
+		section_end_node = new_nnode(END);
+		ilib_list_append(nfa -> nodes, section_end_node);
+	}
+
+	NPath* path = new_npath();
+	path -> target_node = section_end_node;
+	path -> allowed_char = EPSILON;
+	ilib_list_append(current_node -> path_list, path);
+
+	return section_end_node;
+}
+
 NFA* make_nfa(char* regex) {
 	NNode* current_node = NULL;
 	NNode* pre_node = NULL;
+	NNode* section_start_node = NULL;
+	NNode* section_end_node = NULL;
 
 	NFA* nfa = new_nfa();
 	CtrlString* ctr_regex = strctr_init(regex);
 
 	current_node = new_nnode(START);
+	section_start_node = current_node;
 	nfa -> start_node = current_node;
 	ilib_list_add(nfa -> nodes, nfa -> start_node, 0);
 
@@ -109,7 +126,10 @@ NFA* make_nfa(char* regex) {
 				error_and_exit();
 			}
 		} else if ( c == '|') {
+			section_end_node = end_current_path(nfa, section_end_node, current_node);
 
+			current_node = section_start_node;
+			pre_node = NULL;
 		} else if ( c == '(') {
 
 		} else if ( c == ')') {
@@ -128,7 +148,8 @@ NFA* make_nfa(char* regex) {
 			current_node = temp_node;
 
 		} else if ( c == '\0') {
-			current_node -> node_type = END;
+			section_end_node = end_current_path(nfa, section_end_node, current_node);
+
 			return nfa;
 
 		} else {

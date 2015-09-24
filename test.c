@@ -5,7 +5,7 @@ int main() {
 }
 
 int test_nfa() {
-	bool b = simple_match("ab*c*", "abc");
+	bool b = simple_match("abc|de*ff|ghi", "def");
 	if (b == TRUE) {
 		printf("simple_match success. \n");
 	} else {

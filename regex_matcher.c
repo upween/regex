@@ -6,6 +6,8 @@ bool simple_match(char* pattern, char* str) {
 	int strIdx = 0;
 	NFA* nfa = make_nfa(pattern);
 
+	printf("nfa nodes size = %d\n", nfa -> nodes -> list_size);
+
 	NNode* node = nfa -> start_node;
 	char strChar = str[strIdx];
 	while(node -> node_type != END) {
