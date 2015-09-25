@@ -8,6 +8,7 @@
 typedef struct _nfa_node{
 	int node_type;
 	List *path_list;
+	int debug_node_idx;
 } NNode;
 
 typedef struct _nfa{
@@ -72,6 +73,7 @@ void destory_nfa(NFA* nfa) {
 NNode* end_current_path(NFA* nfa, NNode* section_end_node, NNode* current_node) {
 	if (section_end_node == NULL) {
 		section_end_node = new_nnode(END);
+		section_end_node -> debug_node_idx = nfa -> nodes -> list_size;
 		ilib_list_append(nfa -> nodes, section_end_node);
 	}
 
@@ -96,6 +98,7 @@ NFA* make_nfa(char* regex) {
 	current_node = new_nnode(START);
 	section_start_node = current_node;
 	nfa -> start_node = current_node;
+	current_node -> debug_node_idx = nfa -> nodes -> list_size;
 	ilib_list_add(nfa -> nodes, nfa -> start_node, 0);
 
 	char prec;
@@ -144,6 +147,7 @@ NFA* make_nfa(char* regex) {
 		} else if ( (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ) {
 
 			NNode* temp_node = new_nnode(MIDDLE);
+			temp_node -> debug_node_idx = nfa -> nodes -> list_size;
 			ilib_list_append(nfa -> nodes, temp_node);
 
 			NPath* path = new_npath();

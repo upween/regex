@@ -5,7 +5,7 @@ int main() {
 }
 
 int test_nfa() {
-	bool b = simple_match("abc(d|egf", "abcdf");
+	bool b = simple_match("a(b*|c)", "abcdf");
 	if (b == TRUE) {
 		printf("simple_match success. \n");
 	} else {
@@ -18,12 +18,10 @@ int test_stack() {
 	Stack* stack = ilib_stack_newstack();
 
 	ilib_stack_push(stack, 0);
-	ilib_stack_push(stack, 0);
 	ilib_stack_push(stack, 1);
 	ilib_stack_push(stack, 2);
 	ilib_stack_push(stack, 3);
 
-	printf("%d\n", ilib_stack_pop(stack));
 	printf("%d\n", ilib_stack_pop(stack));
 	printf("%d\n", ilib_stack_pop(stack));
 	printf("%d\n", ilib_stack_pop(stack));
