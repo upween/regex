@@ -1,4 +1,4 @@
-#include "myconst.h"
+#include "global_func.c"
 
 typedef struct _listnode{
 	struct _listnode *pre_node;
@@ -11,6 +11,8 @@ typedef struct _list{
 	ListNode *last_node;
 	int list_size;
 } List;
+
+typedef List Stack;
 
 List* ilib_list_newlist(){
 	List* list = malloc(sizeof(List));
@@ -28,7 +30,7 @@ void ilib_list_destroylist(List * list, bool free_content){
 }
 
 int ilib_list_add(List *list, void *node, int index) {
-	if (list == NULL || node == NULL || index > list -> list_size) {
+	if (list == NULL || index > list -> list_size) {
 		return -1;
 	}
 
@@ -122,4 +124,33 @@ int ilib_list_remove(List* list, int index, bool free_content) {
 	free(delete_node);
 
 	return list -> list_size;
+}
+
+Stack* ilib_stack_newstack() {
+	return ilib_list_newlist();
+}
+
+void ilib_stack_destroystack(Stack * stack, bool free_content) {
+	ilib_list_destroylist(stack, free_content);
+}
+
+int ilib_stack_push(Stack * stack, void* node) {
+	return ilib_list_append(stack, node);
+}
+
+void* ilib_stack_pop(Stack* stack) {
+	if (stack -> list_size == 0) {
+		char* errmsg = "ilib_stack error : current stack is clear";
+		global_error_and_exit(errmsg);
+	} else {
+		void* temp_node = ilib_list_get(stack, stack -> list_size - 1);
+		ilib_list_remove(stack, stack -> list_size - 1, FALSE);
+		return temp_node;
+	}
+}
+
+void ilib_stack_clear(Stack* stack) {
+	while (stack -> list_size > 0) {
+		ilib_stack_pop(stack);
+	}
 }

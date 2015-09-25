@@ -69,14 +69,6 @@ void destory_nfa(NFA* nfa) {
 	free(nfa);
 }
 
-
-
-
-void error_and_exit() {
-	printf("error regex, system will exit.\n");
-	exit(0);
-}
-
 NNode* end_current_path(NFA* nfa, NNode* section_end_node, NNode* current_node) {
 	if (section_end_node == NULL) {
 		section_end_node = new_nnode(END);
@@ -96,6 +88,7 @@ NFA* make_nfa(char* regex) {
 	NNode* pre_node = NULL;
 	NNode* section_start_node = NULL;
 	NNode* section_end_node = NULL;
+	Stack* stack_start_nodes = NULL;
 
 	NFA* nfa = new_nfa();
 	CtrlString* ctr_regex = strctr_init(regex);
@@ -123,7 +116,8 @@ NFA* make_nfa(char* regex) {
 				path2 -> allowed_char = EPSILON;
 				ilib_list_append(pre_node -> path_list, path2);
 			} else {
-				error_and_exit();
+				char* errmsg = "error regex, system will exit.";
+				global_error_and_exit(errmsg);
 			}
 		} else if ( c == '|') {
 			section_end_node = end_current_path(nfa, section_end_node, current_node);
@@ -131,9 +125,22 @@ NFA* make_nfa(char* regex) {
 			current_node = section_start_node;
 			pre_node = NULL;
 		} else if ( c == '(') {
-
+			if (stack_start_nodes == NULL) {
+				stack_start_nodes = ilib_stack_newstack();
+			}
+			ilib_stack_push(stack_start_nodes, section_start_node);
+			section_start_node = current_node;
 		} else if ( c == ')') {
-
+			if (stack_start_nodes == NULL || stack_start_nodes -> list_size == 0) {
+				char* errmsg = "error regex, ( ) not match, will exit. ";
+				global_error_and_exit(errmsg);
+			} else {
+				section_end_node = end_current_path(nfa, section_end_node, current_node);
+				section_end_node -> node_type = MIDDLE;
+				current_node = section_end_node;
+				section_start_node = ilib_stack_pop(stack_start_nodes);
+				section_end_node = NULL;
+			}
 		} else if ( (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ) {
 
 			NNode* temp_node = new_nnode(MIDDLE);
@@ -150,10 +157,15 @@ NFA* make_nfa(char* regex) {
 		} else if ( c == '\0') {
 			section_end_node = end_current_path(nfa, section_end_node, current_node);
 
+			if (stack_start_nodes != NULL && stack_start_nodes -> list_size != 0) {
+				global_error_and_exit("error regex, ( ) not match, will exit. ");
+			}
+
 			return nfa;
 
 		} else {
-			error_and_exit();
+			char* errmsg = "error regex, system will exit.";
+			global_error_and_exit(errmsg);
 		}
 	}
 }

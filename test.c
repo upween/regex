@@ -5,12 +5,32 @@ int main() {
 }
 
 int test_nfa() {
-	bool b = simple_match("abc|de*ff|ghi", "def");
+	bool b = simple_match("abc(d|egf", "abcdf");
 	if (b == TRUE) {
 		printf("simple_match success. \n");
 	} else {
 		printf("simple_match fail. \n");
 	}
+	return 0;
+}
+
+int test_stack() {
+	Stack* stack = ilib_stack_newstack();
+
+	ilib_stack_push(stack, 0);
+	ilib_stack_push(stack, 0);
+	ilib_stack_push(stack, 1);
+	ilib_stack_push(stack, 2);
+	ilib_stack_push(stack, 3);
+
+	printf("%d\n", ilib_stack_pop(stack));
+	printf("%d\n", ilib_stack_pop(stack));
+	printf("%d\n", ilib_stack_pop(stack));
+	printf("%d\n", ilib_stack_pop(stack));
+	printf("%d\n", ilib_stack_pop(stack));
+
+	ilib_stack_destroystack(stack, FALSE);
+
 	return 0;
 }
 
