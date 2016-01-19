@@ -90,6 +90,7 @@ NFA* make_nfa(char* regex) {
 	NNode* pre_node = NULL;
 	NNode* section_start_node = NULL;
 	NNode* section_end_node = NULL;
+	NPath* last_path = NULL;
 	Stack* stack_start_nodes = NULL;
 
 	NFA* nfa = new_nfa();
@@ -108,16 +109,14 @@ NFA* make_nfa(char* regex) {
 		c = strctr_next(ctr_regex);
 
 		if ( c == '*') {
-			if (pre_node != NULL) {
+			if (pre_node != NULL && last_path != NULL) {
 				NPath* path = new_npath();
-				path -> target_node = pre_node;
+				path -> target_node = current_node;
 				path -> allowed_char = prec;
-				ilib_list_append(pre_node -> path_list, path);
+				ilib_list_append(current_node -> path_list, path);
 
-				NPath* path2 = new_npath();
-				path2 -> target_node = current_node;
-				path2 -> allowed_char = EPSILON;
-				ilib_list_append(pre_node -> path_list, path2);
+				last_path -> allowed_char = EPSILON;
+				last_path = NULL;
 			} else {
 				char* errmsg = "error regex, system will exit.";
 				global_error_and_exit(errmsg);
@@ -127,12 +126,14 @@ NFA* make_nfa(char* regex) {
 
 			current_node = section_start_node;
 			pre_node = NULL;
+			last_path = NULL;
 		} else if ( c == '(') {
 			if (stack_start_nodes == NULL) {
 				stack_start_nodes = ilib_stack_newstack();
 			}
 			ilib_stack_push(stack_start_nodes, section_start_node);
 			section_start_node = current_node;
+			last_path = NULL;
 		} else if ( c == ')') {
 			if (stack_start_nodes == NULL || stack_start_nodes -> list_size == 0) {
 				char* errmsg = "error regex, ( ) not match, will exit. ";
@@ -143,6 +144,7 @@ NFA* make_nfa(char* regex) {
 				current_node = section_end_node;
 				section_start_node = ilib_stack_pop(stack_start_nodes);
 				section_end_node = NULL;
+				last_path = NULL;
 			}
 		} else if ( (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ) {
 
@@ -154,6 +156,7 @@ NFA* make_nfa(char* regex) {
 			path -> target_node = temp_node;
 			path -> allowed_char = c;
 			ilib_list_append(current_node -> path_list, path);
+			last_path = path;
 
 			pre_node = current_node;
 			current_node = temp_node;
